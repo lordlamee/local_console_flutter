@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:on_screen_logger/src/models/log_output.dart';
+import 'package:local_console_flutter/src/models/log_output.dart';
 
 class LocalLogger{
 
@@ -9,9 +10,14 @@ class LocalLogger{
   LocalLogger._(){
     _init();
   }
+  static final  instance = LocalLogger._();
+
+  final StreamController<LogOutput> _logController = StreamController<LogOutput>.broadcast();
+  final StreamController<int> _stdoutController = StreamController<int>.broadcast();
+
   bool _isInitialized = false;
 
-  static final  instance = LocalLogger._();
+
 
   List<LogOutput> messages = [];
 
@@ -20,6 +26,8 @@ class LocalLogger{
     if(!_isInitialized){
       stdout
     }
+
+    _isInitialized = true;
   }
 
 
@@ -27,4 +35,9 @@ class LocalLogger{
 
   }
 
+
+  close(){
+
+    _logController.close();
+  }
 }
